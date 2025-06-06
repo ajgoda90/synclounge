@@ -8,11 +8,21 @@
 
     <v-list-item-content>
       <v-list-item-title v-text="sender.username" />
+      <template v-for="(msg, index) in processedMessages">
+        <v-list-item-subtitle
+          v-if="msg.text"
+          class="message-content"
+          v-text="msg.text"
+          v-bind:key="index"
+        />
 
-      <v-list-item-subtitle
-        class="message-content"
-        v-text="message.text"
-      />
+        <v-img
+          v-if="msg.image"
+          :src="msg.image"
+          v-bind:key="index"
+        />
+      </template>
+
     </v-list-item-content>
   </v-list-item>
 </template>
@@ -37,6 +47,18 @@ export default {
 
     sender() {
       return this.GET_MESSAGES_USER_CACHE_USER(this.message.senderId);
+    },
+
+    processedMessages() {
+      const regex = /\b(https?:\/\/\S+(?:png|jpe?g|gif)\S*)\b/gi; // find image URLs
+      const parts = this.message.text.split(regex);
+      return parts.map((str, index) => {
+        if (index % 2 !== 0) {
+          /* image URLs will be the odd numbered elements from the split */
+          return { image: str, text: '' };
+        }
+        return { image: '', text: str };
+      });
     },
   },
 };
