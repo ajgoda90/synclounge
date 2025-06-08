@@ -7,13 +7,14 @@
     </v-list-item-avatar>
 
     <v-list-item-content>
-      <v-list-item-title v-text="sender.username" />
+      <v-list-item-subtitle v-text="sender.username" />
       <template v-for="(msg, index) in processedMessages">
-        <v-list-item-subtitle
+        <v-list-item-title
           v-if="msg.text"
           class="message-content"
           v-text="msg.text"
           v-bind:key="index"
+          opacity="1"
         />
 
         <v-img
